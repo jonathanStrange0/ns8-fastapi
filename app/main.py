@@ -1,14 +1,15 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from schemas.traffic_schema import TrafficAddress
-from schemas.client_schema import Client
-from schemas.order_address_schema import OrderAddress
+from fastapi import FastAPI, BackgroundTasks
+import os
+from app.schemas.traffic_schema import TrafficAddress
+from app.schemas.client_schema import Client
+from app.schemas.order_address_schema import OrderAddress
+from app.bots.browse_page import browse_page
+
 import firebase_admin
 from firebase_admin import credentials
 from google.cloud import firestore
 from google.cloud.firestore_v1.field_path import FieldPath
-cred = credentials.Certificate(
-    "./firebase-admin.json")
+cred = credentials.Certificate(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
 firebase_admin.initialize_app(cred)
 app = FastAPI()
 db = firestore.Client()
@@ -114,3 +115,18 @@ def delete_traffic_address(traffic_id: str):
 ###############################################################################
 ##### GENERATING ORDER ADDRESSES HERE #########################################
 ###############################################################################
+
+
+###############################################################################
+##### Website Calls being made here   #########################################
+###############################################################################
+
+
+@app.get("/traffic/ping/{traffic_id}")
+def ping_site_with_chrome(traffic_id: str, background_tasks: BackgroundTasks):
+    doc_ref = db.collection(u'traffic').document(traffic_id)
+    address = doc_ref.get().to_dict()['address']
+    print("now making request to the associated address")
+    # # TODO: fire background process to generate traffic and return success
+    background_tasks.add_task(browse_page, address)
+    return {"Browsed Page for": traffic_id}
