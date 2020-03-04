@@ -1,0 +1,1 @@
+export GOOGLE_APPLICATION_CREDENTIALS="/home/jon/apps/fastapi_testing/ns8-traffic-api-firebase-adminsdk-t7jah-a2277afb7c.json"
