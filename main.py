@@ -38,6 +38,7 @@ class Client(BaseModel):
     """
         the client object used in database
     """
+    client_id: str = None
     client_name: str
 
 
@@ -61,17 +62,12 @@ def update_item(client: Client):
     db = firestore.Client()
     doc_ref = db.collection(u'clients').document(client.client_name)
     doc_ref.set({
+        u'client_id':None,
         u'client_name': client.client_name
     })
-    # print(db.collection(u'clients').document(
-    #     client.client_name).get('client_name'))
-    fp = FieldPath()
-    print(client.client_name)
-    # path = fp.from_string(
-    #     'clients.' + str(client.client_name) + '.client_name')
-    # print(path)
-    # return {"Client": db.collection(u'clients').document(client.client_name).get()}
-    # return {"Something": "MIght have HAapenED"}
+
+    return doc_ref.get().to_dict()
+
 
 
 @app.put("/clients/{client_id}")
