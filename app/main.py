@@ -9,10 +9,14 @@ import firebase_admin
 from firebase_admin import credentials
 from google.cloud import firestore
 from google.cloud.firestore_v1.field_path import FieldPath
+from apscheduler.schedulers.background import BackgroundScheduler
+
+
 cred = credentials.Certificate(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
 firebase_admin.initialize_app(cred)
 app = FastAPI()
 db = firestore.Client()
+scheduler = BackgroundScheduler()
 
 
 ###############################################################################
@@ -126,7 +130,29 @@ def delete_traffic_address(traffic_id: str):
 def ping_site_with_chrome(traffic_id: str, background_tasks: BackgroundTasks):
     doc_ref = db.collection(u'traffic').document(traffic_id)
     address = doc_ref.get().to_dict()['address']
-    print("now making request to the associated address")
-    # # TODO: fire background process to generate traffic and return success
-    background_tasks.add_task(browse_page, address)
-    return {"Browsed Page for": traffic_id}
+    print("now making request to the associated address: ", address)
+
+    # add the job to the scheduler and start the scheduler if it hasn't been yet
+    scheduler.add_job(browse_page,  'interval', args=[
+                      address], seconds=15, id=traffic_id, name='browse_page')
+    if not scheduler.running:
+        scheduler.start()
+
+    # fastapi also offers a background task functionality, maybe later.
+    # background_tasks.add_task(browse_page, address)
+    # browse_page(address)
+
+    return {"Browsed Page": address}
+
+
+@app.get("/shutdown")
+def shutdown_background_tasks():
+    """
+        Kill the running APScheduler and restart it
+    """
+    try:
+        # scheduler = BackgroundScheduler()
+        scheduler.shutdown()
+        scheduler.start()
+    except:
+        pass
