@@ -10,3 +10,4 @@ class TrafficAddress(BaseModel):
     """
     client_id: int = None
     address: str
+    interval: int
