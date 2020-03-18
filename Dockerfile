@@ -1,5 +1,5 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
-
+#FROM selenium/standalone-chrome
 
 # Install manually all the missing libraries
 RUN apt-get update
@@ -16,7 +16,10 @@ RUN mkdir /google
 COPY firebase-admin.json /google/firebase-admin.json
 ENV GOOGLE_APPLICATION_CREDENTIALS='/google/firebase-admin.json'
 
+#COPY google-requirements.txt google-requirements.txt
 COPY requirements.txt requirements.txt
+
+#RUN pip install -r google-requirements.txt
 RUN pip install -r requirements.txt
 
 COPY ./app /app

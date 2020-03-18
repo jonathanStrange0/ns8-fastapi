@@ -1,22 +1,31 @@
+from app.page_browse_scheduler import PeriodicBrowser
+import threading
 from fastapi import APIRouter, BackgroundTasks
 from app.schemas.traffic_schema import TrafficAddress
 from app.firebase.fb_client import fb_client
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ProcessPoolExecutor
 from apscheduler.jobstores.base import BaseJobStore
-from app.bots.browse_page import browse_page
+from app.bots.browse_page import browse_page, recurring_browser
+from datetime import datetime
+from pathlib import Path
+import schedule
+import time
+import sched
 
-executors = {
-    'default': ProcessPoolExecutor(20)
-}
+# executors = {
+#    'default': ProcessPoolExecutor(20)
+# }
 # job_defaults = {
 #     'coalesce': False,
 #     'max_instances': 5
 # }
 scheduler = BackgroundScheduler()
-scheduler.configure(executors=executors)  # , job_defaults=job_defaults)
+# scheduler.configure(executors=executors)  # , job_defaults=job_defaults)
 router = APIRouter()
 db = fb_client()
+s = sched.scheduler(time.time, time.sleep)
+schedule_event_listing = {}
 
 
 ###############################################################################
@@ -74,34 +83,30 @@ def delete_traffic_address(traffic_id: str):
 
 @router.get("/traffic/ping/{traffic_id}")
 def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: BackgroundTasks):
+    # def ping_site_with_chrome(traffic_id: str, interval: int):
     doc_ref = db.collection(u'traffic').document(traffic_id)
     address = doc_ref.get().to_dict()['address']
-    print("now making request to the associated address: ", address)
-
-    if not scheduler.running:
-        scheduler.start()
-    if traffic_id not in list(map(lambda x: x.id, scheduler.get_jobs())):
-        # add the job to the scheduler and start the scheduler if it hasn't been yet
-        scheduler.add_job(browse_page,  'interval', args=[
-                          address], seconds=interval, id=traffic_id, name='browse_page')
+    if traffic_id not in schedule_event_listing.keys():
+        pb = PeriodicBrowser(interval, address)
+        schedule_event_listing[traffic_id] = pb
+        background_tasks.add_task(pb.start, browse_page)
+        return {'Address ID': traffic_id,
+                'Address Scheduled for Browsing': address,
+                'Browsing Interval (Seconds)': interval}
     else:
-        return {"This address is scheudled for traffic already": address}
-    # fastapi also offers a background task functionality, maybe later.
-    # background_tasks.add_task(browse_page, address)
-    # browse_page(address)
-
-    return {"Browsed Page": address}
+        return {'Address ID': traffic_id,
+                'Already Running': True}
 
 
-@router.get("/shutdown")
-def shutdown_background_tasks():
+@router.get("/shutdown/{traffic_id}")
+def shutdown_background_tasks(traffic_id: str):
     """
         Kill the running APScheduler and restart it
     """
-
     try:
-        # scheduler = BackgroundScheduler()
-        scheduler.shutdown()
-        scheduler.start()
-    except:
-        pass
+        browser_to_stop = schedule_event_listing[traffic_id]
+        browser_to_stop.stop()
+        del schedule_event_listing[traffic_id]
+        return {'Stopped Address ID': traffic_id}
+    except Exception as e:
+        return {'Error': e}

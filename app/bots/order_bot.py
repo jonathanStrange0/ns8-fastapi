@@ -397,3 +397,7 @@ def create_magento_order_mediotype(url, headless=False):
             '//*[@id="billing-address-same-as-shipping-checkmo"]').click()
         time.sleep(7)
         browser.find_element_by_class_name('.action.primary.checkout').click()
+
+    # Quit the browser:
+    time.sleep(9)
+    browser.quit()
