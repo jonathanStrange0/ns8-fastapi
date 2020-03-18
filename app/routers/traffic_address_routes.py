@@ -12,6 +12,8 @@ from pathlib import Path
 import schedule
 import time
 import sched
+import google.cloud.logging
+import logging
 
 # executors = {
 #    'default': ProcessPoolExecutor(20)
@@ -26,6 +28,9 @@ router = APIRouter()
 db = fb_client()
 s = sched.scheduler(time.time, time.sleep)
 schedule_event_listing = {}
+logging_client = google.cloud.logging.Client()
+
+logging_client.setup_logging()
 
 
 ###############################################################################
@@ -90,6 +95,8 @@ def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: Back
         pb = PeriodicBrowser(interval, address)
         schedule_event_listing[traffic_id] = pb
         background_tasks.add_task(pb.start, browse_page)
+        logging.info('set address to be browsed: {} with interavl: {}, scheduler listing object {}'.format(
+            address, interval, schedule_event_listing[traffic_id]))
         return {'Address ID': traffic_id,
                 'Address Scheduled for Browsing': address,
                 'Browsing Interval (Seconds)': interval}
