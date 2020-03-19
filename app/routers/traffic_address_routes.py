@@ -105,8 +105,8 @@ def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: Back
         # browse_page(address)
         logging.info('about to schedule background repetitive browsing task')
         # background_tasks.add_task(pb.start, browse_page)
-        # background_tasks.add_task(pb.start)
-        threading.Thread(target=pb.start).start()
+        background_tasks.add_task(pb.start)
+        # threading.Thread(target=pb.start).start()
         logging.info('set background task')
         logging.info('set address to be browsed: {} with interval: {}, scheduler listing object {}'.format(
             address, interval, schedule_event_listing[traffic_id]))
