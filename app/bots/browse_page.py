@@ -19,8 +19,8 @@ def browse_page(page):
 
     """
     try:
-        if 'https://' not in page[0:8]:
-            page = 'https://' + page
+        # if 'https://' not in page[0:8]:
+        #     page = 'https://' + page
         print("WE ARE BROWSING TO THIS PAGE: {}".format(page))
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')

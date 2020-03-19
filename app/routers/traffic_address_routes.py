@@ -88,14 +88,27 @@ def delete_traffic_address(traffic_id: str):
 
 @router.get("/traffic/ping/{traffic_id}")
 def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: BackgroundTasks):
+    """
+        Makes a periodic call to a website based on the interval provided
+
+        Given a database ID for the address you would like to drive traffic to,
+        this endpoint will schedule a thread to visit this site on a timer
+        set by the interval variable provided.
+    """
     # def ping_site_with_chrome(traffic_id: str, interval: int):
     doc_ref = db.collection(u'traffic').document(traffic_id)
     address = doc_ref.get().to_dict()['address']
     if traffic_id not in schedule_event_listing.keys():
         pb = PeriodicBrowser(interval, address)
+        logging.info('set pb')
         schedule_event_listing[traffic_id] = pb
-        background_tasks.add_task(pb.start, browse_page)
-        logging.info('set address to be browsed: {} with interavl: {}, scheduler listing object {}'.format(
+        # browse_page(address)
+        logging.info('about to schedule background repetitive browsing task')
+        # background_tasks.add_task(pb.start, browse_page)
+        # background_tasks.add_task(pb.start)
+        threading.Thread(target=pb.start).start()
+        logging.info('set background task')
+        logging.info('set address to be browsed: {} with interval: {}, scheduler listing object {}'.format(
             address, interval, schedule_event_listing[traffic_id]))
         return {'Address ID': traffic_id,
                 'Address Scheduled for Browsing': address,
@@ -108,12 +121,14 @@ def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: Back
 @router.get("/shutdown/{traffic_id}")
 def shutdown_background_tasks(traffic_id: str):
     """
-        Kill the running APScheduler and restart it
+        Kill the running process of your choosing
     """
     try:
         browser_to_stop = schedule_event_listing[traffic_id]
         browser_to_stop.stop()
         del schedule_event_listing[traffic_id]
+        logging.info('remaining scheduled events {}'.format(
+            schedule_event_listing.keys()))
         return {'Stopped Address ID': traffic_id}
     except Exception as e:
         return {'Error': e}
