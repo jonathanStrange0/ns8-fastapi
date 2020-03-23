@@ -15,10 +15,18 @@ def create_woo_order(headless=False):
 
     # get the store up in selenium
     url = "http://woocommerce.sales.ns8demos.com"
-    opts = Options()
-    opts.headless = headless
-    browser = Firefox(options=opts)
+    chrome_options = webdriver.ChromeOptions()
+    if headless:
+        chrome_options.add_argument('--headless')
+    chrome_options.add_argument('user-agent={}'.format(Faker().user_agent()))
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--window-size=1024,768')
+    chrome_options.add_argument('--no-sandbox')
+
+    browser = webdriver.Chrome( chrome_options=chrome_options)
     browser.get(url)
+    time.sleep(2)
 
     # Choose Products
     browser.find_element_by_xpath(
@@ -27,6 +35,7 @@ def create_woo_order(headless=False):
     # Adjust number of items to add to cart
     qty = browser.find_elements_by_class_name("input-text.qty.text")[0]
     qty.send_keys(Keys.BACKSPACE)
+    qty.send_keys(Keys.DELETE)
     qty.send_keys(str(random.choice(range(1, 11))))
 
     # Add product to cart
@@ -73,15 +82,15 @@ def create_woo_order(headless=False):
     code = browser.find_element_by_xpath('//*[@id="authnet-card-cvc"]')
     code.send_keys(fake.credit_card_security_code())
 
-    print(first_name.get_attribute('value') +
-          ' ' + last_name.get_attribute('value'))
-    print(st_ad.get_attribute('value'))
-    print(city.get_attribute('value') + ', ' + zip.get_attribute('value'))
-    print(email.get_attribute('value'))
-    print(phone.get_attribute('value'))
-    print(card.get_attribute('value'))
-    print(expires.get_attribute('value'))
-    print(code.get_attribute('value'))
+    # print(first_name.get_attribute('value') +
+    #       ' ' + last_name.get_attribute('value'))
+    # print(st_ad.get_attribute('value'))
+    # print(city.get_attribute('value') + ', ' + zip.get_attribute('value'))
+    # print(email.get_attribute('value'))
+    # print(phone.get_attribute('value'))
+    # print(card.get_attribute('value'))
+    # print(expires.get_attribute('value'))
+    # print(code.get_attribute('value'))
 
     # Wait a few moments
     time.sleep(10)

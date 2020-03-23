@@ -1,6 +1,6 @@
 from fastapi import FastAPI, BackgroundTasks, Depends, Header, HTTPException
 
-from app.routers import users_routes, traffic_address_routes
+from app.routers import users_routes, traffic_address_routes, order_address_routes
 
 from app.schemas.client_schema import Client
 from app.schemas.order_address_schema import OrderAddress
@@ -24,3 +24,4 @@ app = FastAPI()
 # app.include_router(users_routes.router)
 
 app.include_router(traffic_address_routes.router, tags=['traffic'])
+app.include_router(order_address_routes.router, tags=['orders'])

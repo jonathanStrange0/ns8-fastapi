@@ -14,14 +14,9 @@ import time
 import sched
 import google.cloud.logging
 import logging
+import requests
+from app.periodic import PeriodicFunction
 
-# executors = {
-#    'default': ProcessPoolExecutor(20)
-# }
-# job_defaults = {
-#     'coalesce': False,
-#     'max_instances': 5
-# }
 scheduler = BackgroundScheduler()
 # scheduler.configure(executors=executors)  # , job_defaults=job_defaults)
 router = APIRouter()
@@ -29,7 +24,6 @@ db = fb_client()
 s = sched.scheduler(time.time, time.sleep)
 schedule_event_listing = {}
 logging_client = google.cloud.logging.Client()
-
 logging_client.setup_logging()
 
 
@@ -73,7 +67,7 @@ def update_traffic_address(traffic_id: str, traffic_address: TrafficAddress):
     return {"Update Status": "Complete"}
 
 
-@router.delete("/clients/{traffic_id}")
+@router.delete("/traffic/{traffic_id}")
 def delete_traffic_address(traffic_id: str):
     """
         docstring for delete(client_id)
@@ -117,8 +111,42 @@ def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: Back
         return {'Address ID': traffic_id,
                 'Already Running': True}
 
+@router.get('/traffic/ping/pingonetime/{traffic_id}')
+def ping_one_time(traffic_id:str):
+    doc_ref = db.collection(u'traffic').document(traffic_id)
+    address = doc_ref.get().to_dict()['address']
+    browse_page(address)
 
-@router.get("/shutdown/{traffic_id}")
+    return {'Browsed Page' : address}
+
+
+@router.get('/traffic/ping/pingabunch/')
+def ping_a_bunch(address:str, traffic_id:str, interval:int, background_tasks: BackgroundTasks):
+# For testing, just hard code the endpoint address
+# def ping_a_bunch(traffic_id:str, interval:int, background_tasks: BackgroundTasks):
+
+    # browsing_address = 'http://127.0.0.1:8000/traffic/ping/pingonetime/{}'.format(traffic_id)
+    browsing_address = '{}/{}'.format(address,traffic_id)
+    if traffic_id not in schedule_event_listing.keys():
+        pf = PeriodicFunction(interval, browsing_address)
+        logging.info('set pf')
+        schedule_event_listing[traffic_id] = pf
+        logging.info('about to schedule background repetitive browsing task')
+        background_tasks.add_task(pf.start, requests.get)
+        # threading.Thread(target=pb.start).start()
+        logging.info('set background task')
+        logging.info('set browsing_address to be browsed: {} with interval: {}, scheduler listing object {}'.format(
+            browsing_address, interval, schedule_event_listing[traffic_id]))
+        return {'Address ID': traffic_id,
+                'Address Scheduled for Browsing': browsing_address,
+                'Browsing Interval (Seconds)': interval}
+    else:
+        return {'Address ID': traffic_id,
+                'Already Running': True}
+
+
+
+@router.get("/traffic/shutdown/{traffic_id}")
 def shutdown_background_tasks(traffic_id: str):
     """
         Kill the running process of your choosing

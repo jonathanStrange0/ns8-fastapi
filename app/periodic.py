@@ -2,22 +2,9 @@ import sched
 import sys
 import os
 import time
-from app.bots.browse_page import browse_page
 
 
-def recurring_browser(scheduler, interval, action, action_args=()):
-    scheduler.enter(interval, 1, recurring_browser,
-                    (scheduler, interval, action, action_args))
-    action(*action_args)
-    scheduler.run()
-
-
-class PeriodicBrowser(object):
-    """
-        class will browse a page using "browse_page" function.
-
-    """
-
+class PeriodicFunction(object):
     def __init__(self, interval, address):
         self.scheduler = sched.scheduler(time.time, time.sleep)
         self.interval = interval
@@ -30,9 +17,9 @@ class PeriodicBrowser(object):
                 self.interval, 1, self.periodic, (action, actionargs))
             action(*actionargs)
 
-    def start(self):
+    def start(self, periodic_function):
         self._running = True
-        self.periodic(browse_page, actionargs=[self.address])
+        self.periodic(periodic_function, actionargs=[self.address])
         self.scheduler.run()
 
     def stop(self):
