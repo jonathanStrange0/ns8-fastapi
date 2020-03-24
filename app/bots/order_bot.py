@@ -97,7 +97,8 @@ def create_woo_order(headless=False):
 
     # Place the order
     browser.find_element_by_xpath('//*[@id="place_order"]').click()
-
+    time.sleep(4)
+    browser.quit()
 
 def create_magento_order(url, headless=False):
 
@@ -144,7 +145,7 @@ def create_magento_order(url, headless=False):
     qty = browser.find_element_by_xpath('//*[@id="qty"]')
     # qty = browser.find_elements_by_class_name("input-text.qty.text")[0]
     qty.send_keys(Keys.BACKSPACE)
-    qty.send_keys(Keys.BACKSPACE)
+    qty.send_keys(Keys.DELETE)
 
     qty.send_keys(str(random.choice(range(1, 11))))
 
@@ -173,7 +174,7 @@ def create_magento_order(url, headless=False):
 
     # Fill in the checkout form
     # Wait for form to load
-    time.sleep(10)
+    time.sleep(20)
     first_name = browser.find_element_by_name('firstname')
     first_name.send_keys(fake.first_name())
 
@@ -249,7 +250,8 @@ def create_magento_order(url, headless=False):
             '//*[@id="billing-address-same-as-shipping-checkmo"]').click()
         browser.find_element_by_xpath(
             '/html/body/div[2]/main/div[2]/div/div[2]/div[4]/ol/li[3]/div/form/fieldset/div[1]/div/div/div[2]/div[2]/div[4]/div/button/span').click()
-
+    time.sleep(4)
+    browser.quit()
 
 def create_magento_order_mediotype(url, headless=False):
 
