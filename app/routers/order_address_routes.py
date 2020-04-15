@@ -1,6 +1,7 @@
 from fastapi import APIRouter, BackgroundTasks
 from app.schemas.order_address_schema import OrderAddress
 from app.bots.order_bot import create_woo_order, create_magento_order, create_magento_order_mediotype
+from app.bots.shopify_bots import create_shopify_order
 from app.periodic import PeriodicFunction
 import google.cloud.logging
 import logging
@@ -30,25 +31,47 @@ def place_woo_order(background_tasks: BackgroundTasks):
 
 
 @router.get('/orders/magento_ns8')
-def place_woo_order(background_tasks: BackgroundTasks):
+def place_magento_order(background_tasks: BackgroundTasks):
     try:
         # background_tasks.add_task(create_magento_order, True)
-        create_woo_order(headless=True)
+        create_magento_order(url='https://magento-demo-1.ns8demos.com/', headless=True)
         return {'Status' : 'Success'}
     except Exception as e:
-        return {'Status': 'Failuer',
+        return {'Status': 'Failed',
                 'error' : e}
 
 
 @router.get('/orders/mediotype')
-def place_woo_order(background_tasks: BackgroundTasks):
+def place_mediotype_order(background_tasks: BackgroundTasks):
     try:
         # background_tasks.add_task(create_magento_order_mediotype, True)
-        create_woo_order(headless=True)
+        create_magento_order_mediotype(headless=True)
         return {'Status' : 'Success'}
     except Exception as e:
-        return {'Status': 'Failuer',
+        return {'Status': 'Failed',
                 'error' : e}
+
+@router.get('/orders/shopify')
+def place_shopify_order(background_tasks: BackgroundTasks):
+    address = None
+    if address:
+        try:
+            # background_tasks.add_task(create_magento_order_mediotype, True)
+            create_shopify_order(url=address, headless=True)
+            return {'Status' : 'Success'}
+        except Exception as e:
+            return {'Status': 'Failed',
+                    'error' : e}
+    else:
+        try:
+            # background_tasks.add_task(create_magento_order_mediotype, True)
+            create_shopify_order(headless=True)
+            return {'Status' : 'Success'}
+        except Exception as e:
+            return {'Status': 'Failed',
+                    'error' : e}
+
+
 
 
 @router.get('/orders/ping/repeatorders/')

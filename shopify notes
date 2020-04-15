@@ -1,0 +1,94 @@
+https://ns8-internal-test-store.myshopify.com/
+
+# Available products to purchase:
+/html/body/div[4]/main/div[2]/div/ul/li[1]/div/a
+/html/body/div[4]/main/div[2]/div/ul/li[2]/div/a
+/html/body/div[4]/main/div[2]/div/ul/li[3]/div/a
+/html/body/div[4]/main/div[2]/div/ul/li[4]/div/a
+
+#Add to cart:
+/html/body/div[4]/main/div[1]/div/div/div[2]/div[1]/form/div[2]/button/span[1]
+
+#Buy Now:
+/html/body/div[4]/main/div[1]/div/div/div[2]/div[1]/form/div[2]/div/div/div/div/button[1]
+
+#Wait some time...
+time.sleep(4)
+
+# Go to cart
+/html/body/div[2]/div/a
+
+# Wait again
+time.sleep(5)
+
+#### Optional: Adjust quantity:
+
+  #qty field:
+  //*[@id="updates_large_19813076795488:da5535a503979db744e8ba2e3bcad8c0"]
+
+  #Update Button:
+  /html/body/div[4]/main/div/div/form/div/div/div/div[3]/input[1]
+
+  #wait again
+  time.sleep(6)
+
+#Checkout:
+/html/body/div[4]/main/div/div/form/div/div/div/div[3]/input[2]
+
+#wait again:
+time.sleep(10)
+
+#Contact Email:
+//*[@id="checkout_email_or_phone"]
+
+# Shipping address
+
+# First Name
+//*[@id="checkout_shipping_address_first_name"]
+
+# Last Name
+//*[@id="checkout_shipping_address_last_name"]
+
+# Street Address
+//*[@id="checkout_shipping_address_address1"]
+
+# City
+//*[@id="checkout_shipping_address_city"]
+
+# State
+//*[@id="checkout_shipping_address_province"]
+
+# Zip Code
+//*[@id="checkout_shipping_address_zip"]
+
+# Continue:
+//*[@id="continue_button"]
+
+# Continue to payment:
+/html/body/div[1]/div/div/main/div[1]/form/div[2]/button/span
+
+#########
+# Pay with CC: -- is default on internal test store -- (check for iframe)
+
+# Card Number
+//*[@id="number"]
+
+# Card Name:
+//*[@id="name"]
+
+# Card Expiration
+//*[@id="expiry"]
+
+# Card CVV
+//*[@id="verification_value"]
+
+
+#########
+# Choose to pay with MO:
+//*[@id="checkout_payment_gateway_34337423456"]
+
+# wait some more:
+time.sleep(3)
+
+# Complete order:
+/html/body/div[1]/div/div/main/div[1]/div/form/div[3]/div[1]/button/span
