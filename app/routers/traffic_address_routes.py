@@ -15,6 +15,7 @@ import sched
 import google.cloud.logging
 import logging
 import requests
+import random
 from app.periodic import PeriodicFunction
 
 scheduler = BackgroundScheduler()
@@ -80,44 +81,49 @@ def delete_traffic_address(traffic_id: str):
 ###############################################################################
 
 
-@router.get("/traffic/ping/{traffic_id}")
-def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: BackgroundTasks):
-    """
-        Makes a periodic call to a website based on the interval provided
-
-        Given a database ID for the address you would like to drive traffic to,
-        this endpoint will schedule a thread to visit this site on a timer
-        set by the interval variable provided.
-    """
-    # def ping_site_with_chrome(traffic_id: str, interval: int):
-    doc_ref = db.collection(u'traffic').document(traffic_id)
-    address = doc_ref.get().to_dict()['address']
-    if traffic_id not in schedule_event_listing.keys():
-        pb = PeriodicBrowser(interval, address)
-        logging.info('set pb')
-        schedule_event_listing[traffic_id] = pb
-        # browse_page(address)
-        logging.info('about to schedule background repetitive browsing task')
-        # background_tasks.add_task(pb.start, browse_page)
-        background_tasks.add_task(pb.start)
-        # threading.Thread(target=pb.start).start()
-        logging.info('set background task')
-        logging.info('set address to be browsed: {} with interval: {}, scheduler listing object {}'.format(
-            address, interval, schedule_event_listing[traffic_id]))
-        return {'Address ID': traffic_id,
-                'Address Scheduled for Browsing': address,
-                'Browsing Interval (Seconds)': interval}
-    else:
-        return {'Address ID': traffic_id,
-                'Already Running': True}
+# @router.get("/traffic/ping/{traffic_id}")
+# def ping_site_with_chrome(traffic_id: str, interval: int, background_tasks: BackgroundTasks):
+#     """
+#         Makes a periodic call to a website based on the interval provided
+#
+#         Given a database ID for the address you would like to drive traffic to,
+#         this endpoint will schedule a thread to visit this site on a timer
+#         set by the interval variable provided.
+#     """
+#     # def ping_site_with_chrome(traffic_id: str, interval: int):
+#     doc_ref = db.collection(u'traffic').document(traffic_id)
+#     address = doc_ref.get().to_dict()['address']
+#     if traffic_id not in schedule_event_listing.keys():
+#         pb = PeriodicBrowser(interval, address)
+#         logging.info('set pb')
+#         schedule_event_listing[traffic_id] = pb
+#         # browse_page(address)
+#         logging.info('about to schedule background repetitive browsing task')
+#         # background_tasks.add_task(pb.start, browse_page)
+#         background_tasks.add_task(pb.start)
+#         # threading.Thread(target=pb.start).start()
+#         logging.info('set background task')
+#         logging.info('set address to be browsed: {} with interval: {}, scheduler listing object {}'.format(
+#             address, interval, schedule_event_listing[traffic_id]))
+#         return {'Address ID': traffic_id,
+#                 'Address Scheduled for Browsing': address,
+#                 'Browsing Interval (Seconds)': interval}
+#     else:
+#         return {'Address ID': traffic_id,
+#                 'Already Running': True}
 
 @router.get('/traffic/ping/pingonetime/{traffic_id}')
 def ping_one_time(traffic_id:str):
+    default_campaign_ref = db.collection(u'campaigns').document(u'default_campaigns')
+    print(default_campaign_ref)
+    print(default_campaign_ref.get().to_dict())
     doc_ref = db.collection(u'traffic').document(traffic_id)
     address = doc_ref.get().to_dict()['address']
-    browse_page(address)
+    campaign = random.choice(default_campaign_ref.get().to_dict()['campaigns'])
+    camp_address = address + '/?utm_source=' + campaign
+    browse_page(camp_address)
 
-    return {'Browsed Page' : address}
+    return {'Browsed Page' : camp_address}
 
 
 @router.get('/traffic/ping/pingabunch/')

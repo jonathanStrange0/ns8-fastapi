@@ -1,0 +1,88 @@
+https://sc-test-store2.mybigcommerce.
+
+# ALL PRODUCTS
+/html/body/header/div/nav/ul[1]/li[1]/a
+
+# get list of all products:
+prod = browser.find_elements_by_class_name('product')
+
+# choose random product:
+num = random.choice(range(len(prod)))
+
+#choose an individual product:
+p = prod[num]
+
+#get product url
+prod_url = p.get_element_by_tag_name('a').get_attribute('href')
+
+# Go to this page:
+browser.get(prod_url)
+
+# Adjust quantity w/
+//*[@id="qty[]"]
+
+# add to cart:
+//*[@id="form-action-addToCart"]
+
+#go to cart:
+/html/body/div[7]/div[1]/div[2]/div/section[1]/a[1]
+
+# Enter email
+//*[@id="email"]
+
+# Continue as guest:
+//*[@id="checkout-customer-continue"]
+
+#wait:
+time.sleep(7)
+
+#Fill in shipping info:
+
+#first name
+//*[@id="firstNameInput"]
+
+#last name
+//*[@id="lastNameInput"]
+
+#Phone Number:
+//*[@id="phoneInput"]
+
+# street address:
+//*[@id="addressLine1Input"]
+
+#City:
+//*[@id="cityInput"]
+
+#State:
+//*[@id="provinceCodeInput"]
+
+# Postal Code:
+//*[@id="postCodeInput"]
+
+# Continue:
+//*[@id="checkout-shipping-continue"]
+
+#wait:
+time.sleep(7)
+
+#enter cc
+//*[@id="ccNumber"]
+
+# CC Expires:
+//*[@id="ccExpiry"]
+
+# Name on card
+//*[@id="ccName"]
+
+#card cvv
+//*[@id="ccCvv"]
+
+# Place orders
+//*[@id="checkout-payment-continue"]
+
+
+
+
+/html/body/div[2]/div[1]/div/div[1]/section[3]/div[1]/form[1]/div[1]/div[1]/label[2]
+
+/html/body/div[2]/div[1]/div/div[1]/section[3]/div[1]/form[1]/div[1]/div[1]/label[2]/span
