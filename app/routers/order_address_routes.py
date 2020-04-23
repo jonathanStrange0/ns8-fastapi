@@ -2,6 +2,7 @@ from fastapi import APIRouter, BackgroundTasks
 from app.schemas.order_address_schema import OrderAddress
 from app.bots.order_bot import create_woo_order, create_magento_order, create_magento_order_mediotype
 from app.bots.shopify_bots import create_shopify_order
+from app.bots.big_com_bots import create_bc_order
 from app.periodic import PeriodicFunction
 import google.cloud.logging
 import logging
@@ -56,7 +57,6 @@ def place_shopify_order(background_tasks: BackgroundTasks):
     address = None
     if address:
         try:
-            # background_tasks.add_task(create_magento_order_mediotype, True)
             create_shopify_order(url=address, headless=True)
             return {'Status' : 'Success'}
         except Exception as e:
@@ -64,13 +64,21 @@ def place_shopify_order(background_tasks: BackgroundTasks):
                     'error' : e}
     else:
         try:
-            # background_tasks.add_task(create_magento_order_mediotype, True)
             create_shopify_order(headless=True)
             return {'Status' : 'Success'}
         except Exception as e:
             return {'Status': 'Failed',
                     'error' : e}
 
+
+@router.get('/orders/big_commerce')
+def place_bigcommerce_order():
+    try:
+        create_bc_order(headless=True)
+        return {'Status' : 'Success'}
+    except Exception as e:
+        return {'Status': 'Failed',
+                'error' : e}
 
 
 

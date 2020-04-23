@@ -115,12 +115,10 @@ def delete_traffic_address(traffic_id: str):
 @router.get('/traffic/ping/pingonetime/{traffic_id}')
 def ping_one_time(traffic_id:str):
     default_campaign_ref = db.collection(u'campaigns').document(u'default_campaigns')
-    print(default_campaign_ref)
-    print(default_campaign_ref.get().to_dict())
     doc_ref = db.collection(u'traffic').document(traffic_id)
     address = doc_ref.get().to_dict()['address']
     campaign = random.choice(default_campaign_ref.get().to_dict()['campaigns'])
-    camp_address = address + '/?utm_source=' + campaign
+    camp_address = address + '/?utm_campaign=' + campaign
     browse_page(camp_address)
 
     return {'Browsed Page' : camp_address}

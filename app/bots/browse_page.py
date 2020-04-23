@@ -41,7 +41,7 @@ def browse_page(page):
         # browser = webdriver.Chrome(
         #     chromedriver_binary, chrome_options=chrome_options)
         browser.get(page)
-        time.sleep(5)
+        time.sleep(3)
         browser.quit()
 
         return True
