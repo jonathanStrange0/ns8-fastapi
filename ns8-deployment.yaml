@@ -1,0 +1,23 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ns8-traffic-api
+  labels:
+    app: ns8-traffic-api
+spec:
+  selector:
+    matchLabels:
+      app: ns8-traffic-api
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: ns8-traffic-api
+        tier: web
+    spec:
+      containers:
+      - name: ns8-traffic-api
+        image: gcr.io/ns8-traffic-api/ns8-traffic-api:v1
+        ports:
+        - containerPort: 80
