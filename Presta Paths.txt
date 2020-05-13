@@ -1,0 +1,107 @@
+# Presta
+
+#url:
+http://prestashop.sales.ns8demos.com/index.php
+
+#products:
+http://prestashop.sales.ns8demos.com/index.php?id_category=6&controller=category
+
+# Products by classname
+product-miniature js-product-miniature
+
+# get list of all products:
+prod = browser.find_elements_by_class_name('product-miniature.js-product-miniature')
+
+# choose random product:
+num = random.choice(range(len(prod)))
+
+#choose an individual product:
+p = prod[num]
+
+#get product url
+prod_url = p.get_element_by_tag_name('a').get_attribute('href')
+
+# Go to this page:
+browser.get(prod_url)
+
+# Adjust quantity w/
+//*[@id="quantity_wanted"]
+
+
+# add to cart:
+/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[2]/button
+
+
+#go to cart:
+/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/a
+#or:
+http://prestashop.sales.ns8demos.com/index.php?controller=cart&action=show
+
+#Go to Checkout
+/html/body/main/section/div/div/section/div/div[2]/div[1]/div[2]/div/a
+
+
+# Enter email
+/html/body/section/div/section/div/div[1]/section[1]/div/div/div[1]/form/section/div[4]/div[1]/input
+
+
+# Continue as guest:
+#//*[@id="checkout-customer-continue"]
+
+#wait:
+time.sleep(7)
+
+#Fill in shipping info:
+
+#first name
+/html/body/section/div/section/div/div[1]/section[1]/div/div/div[1]/form/section/div[2]/div[1]/input
+
+
+#last name
+/html/body/section/div/section/div/div[1]/section[1]/div/div/div[1]/form/section/div[3]/div[1]/input
+
+#Continue:
+/html/body/section/div/section/div/div[1]/section[1]/div/div/div[1]/form/footer/button
+
+
+
+
+# street address:
+/html/body/section/div/section/div/div[1]/section[2]/div/div/form/div/div/section/div[4]/div[1]/input
+
+
+#City:
+/html/body/section/div/section/div/div[1]/section[2]/div/div/form/div/div/section/div[6]/div[1]/input
+
+#State:
+/html/body/section/div/section/div/div[1]/section[2]/div/div/form/div/div/section/div[7]/div[1]/select
+
+
+# Postal Code:
+/html/body/section/div/section/div/div[1]/section[2]/div/div/form/div/div/section/div[7]/div[1]/select
+
+# Continue:
+/html/body/section/div/section/div/div[1]/section[2]/div/div/form/div/div/footer/button
+
+#wait:
+time.sleep(7)
+
+#shipping continue:
+/html/body/section/div/section/div/div[1]/section[3]/div/div[2]/form/button
+
+#pay by bank wire
+//*[@id="payment-option-2”]
+
+#Terms of servers select:
+//*[@id="conditions_to_approve[terms-and-conditions]"]
+
+# Place orders
+/html/body/section/div/section/div/div[1]/section[4]/div/div[3]/div[1]/button
+
+
+
+
+
+/html/body/div[2]/div[1]/div/div[1]/section[3]/div[1]/form[1]/div[1]/div[1]/label[2]
+
+/html/body/div[2]/div[1]/div/div[1]/section[3]/div[1]/form[1]/div[1]/div[1]/label[2]/span

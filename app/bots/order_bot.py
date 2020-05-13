@@ -98,11 +98,11 @@ def create_woo_order(headless=False):
     # print(code.get_attribute('value'))
 
     # Wait a few moments
-    time.sleep(10)
+    time.sleep(6)
 
     # Place the order
     browser.find_element_by_xpath('//*[@id="place_order"]').click()
-    time.sleep(4)
+    time.sleep(7)
     browser.quit()
 
 def create_magento_order(url, headless=False):
