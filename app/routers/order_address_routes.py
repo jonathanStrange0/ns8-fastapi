@@ -38,7 +38,7 @@ def place_woo_order(background_tasks: BackgroundTasks):
 def place_magento_order(background_tasks: BackgroundTasks):
     try:
         # background_tasks.add_task(create_magento_order, True)
-        create_magento_order(url='https://magento-demo-1.ns8demos.com/', headless=True)
+        create_magento_order(url='https://magento-demo-2.ns8demos.com/', headless=True)
         return {'Status' : 'Success'}
     except Exception as e:
         return {'Status': 'Failed',

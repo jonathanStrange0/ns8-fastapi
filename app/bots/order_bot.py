@@ -87,16 +87,6 @@ def create_woo_order(headless=False):
     code = browser.find_element_by_xpath('//*[@id="authnet-card-cvc"]')
     code.send_keys(fake.credit_card_security_code())
 
-    # print(first_name.get_attribute('value') +
-    #       ' ' + last_name.get_attribute('value'))
-    # print(st_ad.get_attribute('value'))
-    # print(city.get_attribute('value') + ', ' + zip.get_attribute('value'))
-    # print(email.get_attribute('value'))
-    # print(phone.get_attribute('value'))
-    # print(card.get_attribute('value'))
-    # print(expires.get_attribute('value'))
-    # print(code.get_attribute('value'))
-
     # Wait a few moments
     time.sleep(6)
 
