@@ -33,48 +33,48 @@ logging_client.setup_logging()
 ###############################################################################
 
 
-@router.post("/traffic/")
-def create_traffic_address(traffic_address: TrafficAddress):
-    """
-        docstring for post() new traffic address
-    """
-    print(traffic_address.address)
-
-    _, doc_ref = db.collection(u'traffic').add({
-        u'client_id': None,
-        u'address': traffic_address.address
-    })
-    #
-    return doc_ref.get().to_dict()
-
-
-@router.get("/traffic/{traffic_id}")
-def get_traffic_address(traffic_id: str, traffic_address: TrafficAddress):
-    obj = {'client_id': address.client_id, "client": address.client,
-           "store_address": address.address}
-    print("This object will be created: ", obj)
-    print("now making request to the associated address")
-    # # TODO: fire background process to generate traffic and return success
-    return obj
-
-
-@router.put("/traffic/{traffic_id}")
-def update_traffic_address(traffic_id: str, traffic_address: TrafficAddress):
-    """
-        docstring for put(client_id)
-    """
-    # TODO: retreive a client from database and update it
-
-    return {"Update Status": "Complete"}
-
-
-@router.delete("/traffic/{traffic_id}")
-def delete_traffic_address(traffic_id: str):
-    """
-        docstring for delete(client_id)
-    """
-    # TODO: retreive a client from database and delete it
-    return {"Delete Status": "Success"}
+# @router.post("/traffic/")
+# def create_traffic_address(traffic_address: TrafficAddress):
+#     """
+#         docstring for post() new traffic address
+#     """
+#     print(traffic_address.address)
+#
+#     _, doc_ref = db.collection(u'traffic').add({
+#         u'client_id': None,
+#         u'address': traffic_address.address
+#     })
+#     #
+#     return doc_ref.get().to_dict()
+#
+#
+# @router.get("/traffic/{traffic_id}")
+# def get_traffic_address(traffic_id: str, traffic_address: TrafficAddress):
+#     obj = {'client_id': address.client_id, "client": address.client,
+#            "store_address": address.address}
+#     print("This object will be created: ", obj)
+#     print("now making request to the associated address")
+#     # # TODO: fire background process to generate traffic and return success
+#     return obj
+#
+#
+# @router.put("/traffic/{traffic_id}")
+# def update_traffic_address(traffic_id: str, traffic_address: TrafficAddress):
+#     """
+#         docstring for put(client_id)
+#     """
+#     # TODO: retreive a client from database and update it
+#
+#     return {"Update Status": "Complete"}
+#
+#
+# @router.delete("/traffic/{traffic_id}")
+# def delete_traffic_address(traffic_id: str):
+#     """
+#         docstring for delete(client_id)
+#     """
+#     # TODO: retreive a client from database and delete it
+#     return {"Delete Status": "Success"}
 
 ###############################################################################
 ##### Website Calls being made here   #########################################
@@ -117,6 +117,15 @@ def ping_one_time(traffic_id:str):
     default_campaign_ref = db.collection(u'campaigns').document(u'default_campaigns')
     doc_ref = db.collection(u'traffic').document(traffic_id)
     address = doc_ref.get().to_dict()['address']
+    campaign = random.choice(default_campaign_ref.get().to_dict()['campaigns'])
+    camp_address = address + '/?utm_campaign=' + campaign
+    browse_page(camp_address)
+
+    return {'Browsed Page' : camp_address}
+
+@router.get('/traffic/ping/pinganywhere/{address}')
+def ping_any_site(address:str):
+    default_campaign_ref = db.collection(u'campaigns').document(u'default_campaigns')
     campaign = random.choice(default_campaign_ref.get().to_dict()['campaigns'])
     camp_address = address + '/?utm_campaign=' + campaign
     browse_page(camp_address)
