@@ -34,11 +34,13 @@ def place_woo_order(background_tasks: BackgroundTasks):
                 'error' : e}
 
 
-@router.get('/orders/magento_ns8')
-def place_magento_order(background_tasks: BackgroundTasks):
+@router.get('/orders/magento_ns8/{traffic_id}')
+def place_magento_order(traffic_id: str, background_tasks: BackgroundTasks):
+    doc_ref = db.collection(u'traffic').document(traffic_id)
+    address = doc_ref.get().to_dict()['address']
     try:
         # background_tasks.add_task(create_magento_order, True)
-        create_magento_order(url='https://magento-demo-2.ns8demos.com/', headless=True)
+        create_magento_order(url=address, headless=True)
         return {'Status' : 'Success'}
     except Exception as e:
         return {'Status': 'Failed',
@@ -111,23 +113,31 @@ def ping_a_bunch(address:str, interval:int, background_tasks: BackgroundTasks):
 
     # scheduled_events = db.collection(u'scheduled_events').document(u'{}'.format(hash(address)))
     # doc_ref = db.collection(u'traffic').document(traffic_id)
+    evt_id = str(uuid.uuid4())
+    evt_data = {
+        u'address' : address,
+        u'browsing_interval': interval
+    }
 
 
-    if address not in schedule_event_listing.keys():
+    if evt_id not in schedule_event_listing.keys():
+        event = db.collection(u'scheduled_events').document(u'{}'.format(evt_id)).set(evt_data)
         pf = PeriodicFunction(interval, address)
         logging.info('set pf')
-        schedule_event_listing[hash(address)] = pf
+        schedule_event_listing[evt_id] = pf
         logging.info('about to schedule background repetitive browsing task')
         background_tasks.add_task(pf.start, requests.get)
         # threading.Thread(target=pb.start).start()
         logging.info('set background task')
         logging.info('set address to be browsed: {} with interval: {}, scheduler listing object {}'.format(
-            address, interval, schedule_event_listing[hash(address)]))
-        return {'Address ID': hash(address),
+            address, interval, schedule_event_listing[evt_id]))
+        return {'Address ID':evt_id,
                 'Address Scheduled for Browsing': address,
                 'Browsing Interval (Seconds)': interval}
     else:
-        return {'Address ID': hash(address),
+        # Should really be updating here
+        ## TODO: apply an update.
+        return {'Address ID': evt_id,
                 'Already Running': True}
 
 
@@ -135,14 +145,26 @@ def ping_a_bunch(address:str, interval:int, background_tasks: BackgroundTasks):
 @router.get("/orders/shutdown/")
 def shutdown_background_tasks(address: str):
     """
-        Kill the running process of your choosing
+        Kill the running process(es) of your choosing
+        with the address specified:
+            eg address='www.apple.com' will kill all order events related to www.apple.com
     """
     try:
-        browser_to_stop = schedule_event_listing[hash(address)]
-        browser_to_stop.stop()
-        del schedule_event_listing[hash(address)]
-        logging.info('remaining scheduled events {}'.format(
-            schedule_event_listing.keys()))
-        return {'Stopped Address ID': address}
+        events = db.collection(u'scheduled_events').where(u'address', u'==', address).stream()
+        # print(events)
+        stopped_addresses = []
+        for event in events:
+
+            # evt_id = event.to_dict()['evt_id']
+            # print(event)
+            # print(u'{} => {}'.format(event.id, event.to_dict()))
+            event.reference.delete()
+            browser_to_stop = schedule_event_listing[event.id]
+            browser_to_stop.stop()
+            del schedule_event_listing[event.id]
+            logging.info('remaining scheduled events {}'.format(
+                schedule_event_listing.keys()))
+            stopped_addresses.append(event.to_dict()['address'])
+        return {'Stopped Address ID': stopped_addresses}
     except Exception as e:
         return {'Error': e}
