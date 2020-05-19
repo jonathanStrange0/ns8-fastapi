@@ -125,6 +125,12 @@ def ping_one_time(traffic_id:str):
 
 @router.get('/traffic/ping/pinganywhere/{address}')
 def ping_any_site(address:str):
+    """
+        insert full https:// address here and we'll go pining away at the site
+        The main page loads, then closes after a few seconds. Not super sophistocated.
+
+        Please use responsabily!
+    """
     default_campaign_ref = db.collection(u'campaigns').document(u'default_campaigns')
     campaign = random.choice(default_campaign_ref.get().to_dict()['campaigns'])
     camp_address = address + '/?utm_campaign=' + campaign
