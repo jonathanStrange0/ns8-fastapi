@@ -1,0 +1,118 @@
+https://ns801-tech-prtnr-na04-dw.demandware.net/on/demandware.store/Sites-RefArch-Site
+
+# electronics categories
+//*[@id="electronics"]
+
+# list of all gategories:
+categories = browser.find_elements_by_class_name(‘category-item’)
+
+# choose category:
+category = categories[random.choice(range(len(categories)))]
+
+# get link for category:
+cat_url = category.get_element_by_tag_name('a').get_attribute('href')
+
+#Got to page:
+browser.get(cat_url)
+
+# get list of all products:
+prod = browser.find_elements_by_class_name('product')
+
+# choose random product:
+num = random.choice(range(len(prod)))
+
+#choose an individual product:
+p = prod[num]
+
+#get product url
+prod_url = p.get_element_by_tag_name('a').get_attribute('href')
+
+# Go to this page:
+browser.get(prod_url)
+
+# Adjust quantity w/
+//*[@id="quantity-1"]
+
+
+# add to cart:
+/html/body/div[1]/div/div/div[2]/div[2]/div[4]/div[6]/div[2]/div/button
+
+time.sleep(15)
+
+#go to cart:
+browser.get(https://ns801-tech-prtnr-na04-dw.demandware.net/s/RefArch/cart?lang=en_US)
+
+#checkout button
+/html/body/div[1]/div/div[3]/div[1]/div[2]/div[10]/div/div[2]/a
+
+# Checkout as guest:
+/html/body/div[1]/div/div/div[2]/div/div[1]/div[2]/a
+
+
+
+
+# Continue as guest:
+//*[@id="checkout-customer-continue"]
+
+#wait:
+time.sleep(7)
+
+#Fill in shipping info:
+
+#first name
+//*[@id="shippingFirstNamedefault"]
+
+
+#last name
+//*[@id="shippingLastNamedefault"]
+
+
+
+#Phone Number:
+//*[@id="shippingPhoneNumberdefault"]
+
+
+# street address:
+//*[@id="shippingAddressOnedefault"]
+
+#country:
+//*[@id="shippingCountrydefault"]
+
+
+#City:
+//*[@id="shippingAddressCitydefault"]
+
+#State:
+//*[@id="shippingStatedefault"]
+
+# Postal Code:
+//*[@id="shippingZipCodedefault"]
+
+time.sleep(10)
+
+# Continue:
+/html/body/div[1]/div/div[1]/div[3]/div[1]/div[7]/div/div/button[1]
+
+
+#wait:
+time.sleep(7)
+
+# Enter email
+//*[@id="email"]
+
+#enter cc
+//*[@id="cardNumber"]
+
+# CC Expires:
+#mo
+//*[@id="expirationMonth"]
+#yr
+//*[@id="expirationYear"]
+
+
+#card cvv
+//*[@id="securityCode"]
+
+
+# Place orders
+/html/body/div[1]/div/div[1]/div[3]/div[1]/div[7]/div/div/button[2]

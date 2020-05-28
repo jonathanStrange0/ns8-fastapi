@@ -6,8 +6,8 @@ from selenium.webdriver.common.keys import Keys
 import chromedriver_binary
 import google.cloud.logging
 import logging
-logging_client = google.cloud.logging.Client()
-logging_client.setup_logging()
+# logging_client = google.cloud.logging.Client()
+# logging_client.setup_logging()
 
 def create_shopify_order(url="https://ns8-internal-test-store.myshopify.com/", headless=False):
 
