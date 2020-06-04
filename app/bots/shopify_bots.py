@@ -363,7 +363,7 @@ def create_shopify_order_kacoko(url="https://kacoko.myshopify.com/", headless=Fa
     if len(iframes) > 2:
 
         browser.switch_to_default_content()
-        time.sleep(1)
+        time.sleep(7)
 
         iframe = browser.find_elements_by_tag_name('iframe')[1]
 
@@ -373,7 +373,7 @@ def create_shopify_order_kacoko(url="https://kacoko.myshopify.com/", headless=Fa
         card.send_keys('1')
 
         browser.switch_to_default_content()
-        time.sleep(1)
+        time.sleep(10)
 
         iframe = browser.find_elements_by_tag_name('iframe')[2]
         browser.switch_to.frame(iframe)
@@ -381,7 +381,7 @@ def create_shopify_order_kacoko(url="https://kacoko.myshopify.com/", headless=Fa
         card_name.send_keys(f_name + ' ' + l_name)
 
         browser.switch_to_default_content()
-        time.sleep(1)
+        time.sleep(5)
 
         iframe = browser.find_elements_by_tag_name('iframe')[3]
         browser.switch_to.frame(iframe)
