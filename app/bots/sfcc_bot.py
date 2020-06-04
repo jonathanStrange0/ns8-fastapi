@@ -91,6 +91,8 @@ def create_salesforce_order(url="https://ns801-tech-prtnr-na04-dw.demandware.net
     # Go to the checkout
     browser.find_element_by_xpath(
         '/html/body/div[1]/div/div[3]/div[1]/div[2]/div[10]/div/div[2]/a').click()
+    time.sleep(5)
+
     # Checkout as guest:
     browser.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/div/div[1]/div[2]/a').click()
 
@@ -136,7 +138,7 @@ def create_salesforce_order(url="https://ns801-tech-prtnr-na04-dw.demandware.net
 
     zip = browser.find_element_by_xpath('//*[@id="shippingZipCodedefault"]')
     zip_text = fake.postalcode_in_state(state_abbr='NV')
-    zip.send_keys(zip_text)
+    zip.send_keys(zip_text[0:5])
 
     time.sleep(10)
 
@@ -162,12 +164,15 @@ def create_salesforce_order(url="https://ns801-tech-prtnr-na04-dw.demandware.net
     # card_name =  browser.find_element_by_xpath('//*[@id="ccName"]')
     # card_name.send_keys(f_name + ' ' + l_name)
 
-    expires_mo = browser.find_element_by_id('//*[@id="expirationMonth"]')
+    expires_mo = browser.find_element_by_xpath('//*[@id="expirationMonth"]')
     expires_mo.send_keys('05')
+
     time.sleep(2)
 
-    expires_yr = browser.find_element_by_id('//*[@id="expirationYear"]')
-    expires_yr.send_keys('25')
+    expires_yr = browser.find_element_by_xpath('//*[@id="expirationYear"]')
+    expires_yr.send_keys('2')
+    expires_yr.send_keys('2')
+
     time.sleep(2)
 
     code = browser.find_element_by_xpath('//*[@id="securityCode"]')
