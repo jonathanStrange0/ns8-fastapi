@@ -1,7 +1,7 @@
 from fastapi import APIRouter, BackgroundTasks
 from app.schemas.order_address_schema import OrderAddress
 from app.bots.order_bot import create_woo_order, create_magento_order, create_magento_order_mediotype
-from app.bots.shopify_bots import create_shopify_order
+from app.bots.shopify_bots import create_shopify_order, create_shopify_order_kacoko
 from app.bots.big_com_bots import create_bc_order
 from app.bots.presta_bot import create_presta_order
 from app.periodic import PeriodicFunction
@@ -70,6 +70,24 @@ def place_shopify_order(background_tasks: BackgroundTasks):
     else:
         try:
             create_shopify_order(headless=True)
+            return {'Status' : 'Success'}
+        except Exception as e:
+            return {'Status': 'Failed',
+                    'error' : e}
+
+@router.get('/orders/shopify_kacoko')
+def place_shopify_order(background_tasks: BackgroundTasks):
+    address = None
+    if address:
+        try:
+            create_shopify_order_kacoko(url=address, headless=True)
+            return {'Status' : 'Success'}
+        except Exception as e:
+            return {'Status': 'Failed',
+                    'error' : e}
+    else:
+        try:
+            create_shopify_order_kacoko(headless=True)
             return {'Status' : 'Success'}
         except Exception as e:
             return {'Status': 'Failed',
