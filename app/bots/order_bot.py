@@ -151,25 +151,26 @@ def create_magento_order(url, headless=False):
 
     # Go to the cart
     time.sleep(10)
-    try:
-        browser.find_element_by_xpath(
-            '/html/body/div[1]/header/div[2]/div[1]/a').click()
-
-        # Go to checkout
-        browser.find_element_by_xpath(
-            '//*[@id="top-cart-btn-checkout"]').click()
-        # browser.find_element_by_xpath(
-        #     '/html/body/div[1]/main/div[1]/div[2]/div/div/div/a').click()
-    except:
-        time.sleep(5)
-        browser.find_element_by_xpath(
-            '/html/body/div[1]/header/div[2]/div[1]/a').click()
-
-        # Go to checkout
-        browser.find_element_by_xpath(
-            '//*[@id="top-cart-btn-checkout"]').click()
-        # browser.find_element_by_xpath(
-        #     '/html/body/div[1]/main/div[1]/div[2]/div/div/div/a').click()
+    browser.get(url + '/index.php/checkout/cart')
+    # try:
+    #     browser.find_element_by_xpath(
+    #         '/html/body/div[1]/main/div[1]/div[2]/div/div/div/a').click()
+    #
+    #     # Go to checkout
+    #     browser.find_element_by_xpath(
+    #         '//*[@id="top-cart-btn-checkout"]').click()
+    #     # browser.find_element_by_xpath(
+    #     #     '/html/body/div[1]/main/div[1]/div[2]/div/div/div/a').click()
+    # except:
+    #     time.sleep(5)
+    #     browser.find_element_by_xpath(
+    #         '/html/body/div[1]/main/div[1]/div[2]/div/div/div/a').click()
+    #
+    #     # Go to checkout
+    #     browser.find_element_by_xpath(
+    #         '//*[@id="top-cart-btn-checkout"]').click()
+    browser.find_element_by_xpath(
+        '/html/body/div[1]/main/div[3]/div/div[2]/div[1]/ul/li[1]/button/span').click()
 
     # Fill in the checkout form
     # Wait for form to load
@@ -218,7 +219,7 @@ def create_magento_order(url, headless=False):
         '/html/body/div[1]/main/div[2]/div/div[2]/div[4]/ol/li[2]/div/div[3]/form/div[3]/div/button/span').click()
 
     # Wait a few moments
-    time.sleep(5)
+    time.sleep(7)
     # Locate all the iframes to get through braintree
     iframes = browser.find_elements_by_tag_name('iframe')
     logging.info('number of iframes: {}'.format(len(iframes)))
@@ -231,7 +232,7 @@ def create_magento_order(url, headless=False):
     # Choose payment method
     browser.find_element_by_xpath('//*[@id="braintree"]').click()
     browser.switch_to_default_content()
-    time.sleep(1)
+    time.sleep(5)
 
     # Choose shipping == billing
     browser.find_element_by_xpath('//*[@id="billing-address-same-as-shipping-braintree"]').click()
