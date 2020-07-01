@@ -3,7 +3,7 @@ from app.schemas.order_address_schema import OrderAddress
 from app.bots.order_bot import create_woo_order, create_magento_order, create_magento_order_mediotype
 from app.bots.shopify_bots import create_shopify_order, create_shopify_order_kacoko
 from app.bots.big_com_bots import create_bc_order
-from app.bots.presta_bot import create_presta_order
+from app.bots.presta_bot import create_presta_order, create_presta_testing_order
 from app.periodic import PeriodicFunction
 from app.firebase.fb_client import fb_client
 import google.cloud.logging
@@ -111,6 +111,20 @@ def place_presta_order():
     except Exception as e:
         return {'Status': 'Failed',
                 'error' : e}
+
+@router.get('/orders/presta_testing')
+def place_presta_testing_order():
+    """
+        route specifically for driving orders to the prestashop/NS8 V2 test store.
+    """
+    try:
+        create_presta_testing_order(headless=True)
+        return {'Status' : 'Success'}
+    except Exception as e:
+        return {'Status': 'Failed',
+                'error' : e}
+
+
 
 
 # @router.get('/test_route')
