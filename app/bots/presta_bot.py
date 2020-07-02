@@ -171,7 +171,7 @@ def create_presta_order(url="http://prestashop.sales.ns8demos.com/index.php", he
     time.sleep(4)
     browser.quit()
 
-def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/index.php", headless=False):
+def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=False):
 
     # create instance of faker
     fake = Faker()
@@ -193,7 +193,7 @@ def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/i
 
 
     #go to all products:
-    product_page = 'http://prestashop-02.testing.ns8demos.com/index.php?id_category=6&controller=category'
+    product_page = url + '?id_category=6&controller=category'
     browser.get(product_page)
 
     # Choose Products
@@ -227,12 +227,12 @@ def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/i
         # If there's some kind of issue, just move on and we'll try with a different product.
         pass
     # Wait some time...
-    time.sleep(2)
+    time.sleep(3)
 
     # Go to cart
     browser.find_element_by_xpath(
         '/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/a').click()
-
+    time.sleep(3)
     # Go to checkout
     browser.find_element_by_xpath(
         '/html/body/main/section/div/div/section/div/div[2]/div[1]/div[2]/div/a').click()
@@ -266,6 +266,13 @@ def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/i
     last_name = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[1]/div/div/div[1]/form/section/div[3]/div[1]/input')
     l_name = fake.last_name()
     last_name.send_keys(l_name)
+
+    #Agree to T's and C's
+    try:
+        element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[1]/div/div/div[1]/form/section/div[9]/div[1]/span/label/input')
+        browser.execute_script("arguments[0].click();", element)
+    except:
+        pass
 
     # Continue as guest
     browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[1]/div/div/div[1]/form/footer/button').click()
@@ -302,6 +309,7 @@ def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/i
     # Continue to Billing Information:
     # browser.find_element_by_xpath('//*[@id="checkout-shipping-continue"]').click()
 
+
     # # Wait:
     # time.sleep(7)
 
@@ -312,23 +320,23 @@ def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/i
     # Wait:
     time.sleep(10)
 
-    # Select shipping:
-    element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[3]/div/div[2]/form/button')
-    browser.execute_script("arguments[0].click();", element)
+    # # Select shipping:
+    # element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[2]/div[4]/div/label/span')
+    # browser.execute_script("arguments[0].click();", element)
 
     # Pay by wire:
-    # browser.find_element_by_xpath('//*[@id="payment-option-2”]').click()
-    element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[2]/div[6]/div/label/span')
+    # browser.find_element_by_xpath('//*[@id="payment-option-1”]').click()
+    element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[2]/div[4]/div/label/span')
     browser.execute_script("arguments[0].click();", element)
 
     # Accept TOS:
-    # browser.find_element_by_xpath('//*[@id="conditions_to_approve[terms-and-conditions]"]').click()
-    element = browser.find_element_by_xpath('//*[@id="conditions_to_approve[terms-and-conditions]"]')
-    browser.execute_script("arguments[0].click();", element)
+    browser.find_element_by_xpath('//*[@id="conditions_to_approve[terms-and-conditions]"]').click()
+    # element = browser.find_element_by_xpath('//*[@id="conditions_to_approve[terms-and-conditions]"]')
+    # browser.execute_script("arguments[0].click();", element)
 
     con_btn = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[3]/div[1]/button')
     browser.execute_script("arguments[0].click();", con_btn)
 
 
     time.sleep(4)
-    browser.quit()
+    # browser.quit()
