@@ -338,5 +338,5 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
     browser.execute_script("arguments[0].click();", con_btn)
 
 
-    time.sleep(4)
-    # browser.quit()
+    time.sleep(1)
+    browser.quit()

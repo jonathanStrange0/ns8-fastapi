@@ -118,8 +118,16 @@ def ping_one_time(traffic_id:str):
     doc_ref = db.collection(u'traffic').document(traffic_id)
     address = doc_ref.get().to_dict()['address']
     campaign = random.choice(default_campaign_ref.get().to_dict()['campaigns'])
-    camp_address = address + '/?utm_campaign=' + campaign
-    browse_page(camp_address)
+    if campaign:
+        camp_address = address + '?utm_campaign=' + campaign
+        browse_page(camp_address)
+        return {'Browsed Page' : camp_address}
+    else:
+        browse_page(address)
+        return {'Browsed Page' : address}
+
+    # camp_address = address + '?utm_campaign=' + campaign
+    # browse_page(camp_address)
 
     return {'Browsed Page' : camp_address}
 
@@ -134,7 +142,7 @@ def ping_any_site(address:str):
     default_campaign_ref = db.collection(u'campaigns').document(u'default_campaigns')
     campaign = random.choice(default_campaign_ref.get().to_dict()['campaigns'])
     if campaign:
-        camp_address = address + '/?utm_campaign=' + campaign
+        camp_address = address + '?utm_campaign=' + campaign
         browse_page(camp_address)
         return {'Browsed Page' : camp_address}
     else:
