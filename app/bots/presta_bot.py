@@ -143,8 +143,8 @@ def create_presta_order(url="http://prestashop.sales.ns8demos.com/index.php", he
     # # Wait:
     # time.sleep(7)
 
-    element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[3]/div/div[2]/form/button')
-    browser.execute_script("arguments[0].click();", element)
+    # element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[3]/div/div[2]/form/button')
+    # browser.execute_script("arguments[0].click();", element)
     # browser.find_element_by_xpath('/html/body/div[1]/div/div/main/div[1]/form/div[2]/button/span').click()
 
     # Wait:
@@ -324,10 +324,57 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
     # element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[2]/div[4]/div/label/span')
     # browser.execute_script("arguments[0].click();", element)
 
-    # Pay by wire:
+    # Pay by CC:
     # browser.find_element_by_xpath('//*[@id="payment-option-1”]').click()
-    element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[2]/div[4]/div/label/span')
+    element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[2]/div[1]/div/label/span')
     browser.execute_script("arguments[0].click();", element)
+
+    time.sleep(5)
+    iframe = browser.find_elements_by_tag_name('iframe')[0]
+
+    browser.switch_to.frame(iframe)
+    card = browser.find_element_by_name('cardnumber')
+    # card = browser.find_element_by_xpath('//*[@id="stripe-card-number"]')
+    card.send_keys('4111111111111111')
+
+    browser.switch_to_default_content()
+    time.sleep(3)
+
+    # Create expiration mo/year
+    exp_date = fake.credit_card_expire(start='now', end='+3y', date_format='%m%y')
+    exp_mo = exp_date[0:2]
+    exp_yr = exp_date[-2:]
+
+    #enter expires month
+    iframe = browser.find_elements_by_tag_name('iframe')[1]
+    browser.switch_to.frame(iframe)
+    expires_mo = browser.find_element_by_name('exp-date')
+    expires_mo.send_keys(exp_mo + exp_yr)
+
+    browser.switch_to_default_content()
+    time.sleep(1)
+
+    #enter expires year
+    # iframe = browser.find_elements_by_tag_name('iframe')[2]
+    # browser.switch_to.frame(iframe)
+    # expires_yr = browser.find_element_by_xpath('//*[@id="expiration-year"]')
+    # expires_yr.send_keys(exp_yr)
+    # expires.send_keys(fake.credit_card_expire(
+    #     start='now', end='+3y', date_format='%m%y'))
+
+    # browser.switch_to_default_content()
+    time.sleep(1)
+
+    iframe = browser.find_elements_by_tag_name('iframe')[2]
+    browser.switch_to.frame(iframe)
+    code = browser.find_element_by_name('cvc')
+    code.send_keys(fake.credit_card_security_code()[0:3])
+
+    browser.switch_to_default_content()
+    time.sleep(5)
+
+
+
 
     # Accept TOS:
     browser.find_element_by_xpath('//*[@id="conditions_to_approve[terms-and-conditions]"]').click()
@@ -339,4 +386,4 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
 
 
     time.sleep(1)
-    browser.quit()
+    # browser.quit()
