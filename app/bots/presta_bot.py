@@ -171,7 +171,7 @@ def create_presta_order(url="http://prestashop.sales.ns8demos.com/index.php", he
     time.sleep(4)
     browser.quit()
 
-def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=False):
+def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/index.php", headless=False):
 
     # create instance of faker
     fake = Faker()
@@ -237,16 +237,6 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
     browser.find_element_by_xpath(
         '/html/body/main/section/div/div/section/div/div[2]/div[1]/div[2]/div/a').click()
 
-    # Go to the checkout
-    # browser.find_element_by_xpath(
-    #     '/html/body/div[7]/div[1]/div[2]/div/section[1]/a[1]').click()
-    # con_btn = browser.find_element_by_class_name(
-    #     'button.button--primary')
-    # con_btn = browser.find_element_by_class_name(
-    #     'button.button--primary')
-    # browser.execute_script("arguments[0].click();", con_btn)
-    # browser.get(url+'/checkout')
-    #wait again:
     time.sleep(8)
 
     # Fill in the checkout form
@@ -306,12 +296,7 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
     # Wait:
     time.sleep(7)
 
-    # Continue to Billing Information:
-    # browser.find_element_by_xpath('//*[@id="checkout-shipping-continue"]').click()
-
-
-    # # Wait:
-    # time.sleep(7)
+    # Continue to Billing Information / Select Shipping:
 
     element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[3]/div/div[2]/form/button')
     browser.execute_script("arguments[0].click();", element)
@@ -319,10 +304,6 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
 
     # Wait:
     time.sleep(10)
-
-    # # Select shipping:
-    # element = browser.find_element_by_xpath('/html/body/section/div/section/div/div[1]/section[4]/div/div[2]/div[4]/div/label/span')
-    # browser.execute_script("arguments[0].click();", element)
 
     # Pay by CC:
     # browser.find_element_by_xpath('//*[@id="payment-option-1”]').click()
@@ -354,17 +335,6 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
     browser.switch_to_default_content()
     time.sleep(1)
 
-    #enter expires year
-    # iframe = browser.find_elements_by_tag_name('iframe')[2]
-    # browser.switch_to.frame(iframe)
-    # expires_yr = browser.find_element_by_xpath('//*[@id="expiration-year"]')
-    # expires_yr.send_keys(exp_yr)
-    # expires.send_keys(fake.credit_card_expire(
-    #     start='now', end='+3y', date_format='%m%y'))
-
-    # browser.switch_to_default_content()
-    time.sleep(1)
-
     iframe = browser.find_elements_by_tag_name('iframe')[2]
     browser.switch_to.frame(iframe)
     code = browser.find_element_by_name('cvc')
@@ -372,8 +342,6 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
 
     browser.switch_to_default_content()
     time.sleep(5)
-
-
 
 
     # Accept TOS:
@@ -386,4 +354,4 @@ def create_presta_testing_order(url="http://54.184.239.237/index.php", headless=
 
 
     time.sleep(1)
-    # browser.quit()
+    browser.quit()
