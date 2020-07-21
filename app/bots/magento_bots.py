@@ -146,7 +146,7 @@ def create_magento_order_wilson(url, headless=False):
         # logging.info('iframe title: {}'.format(iframes[i].get_attribute('name')))
 
     # Choose payment method
-    browser.find_element_by_xpath('//*[@id="braintree"]').click()
+    # browser.find_element_by_xpath('//*[@id="braintree"]').click()
     browser.switch_to_default_content()
     time.sleep(5)
 
@@ -210,7 +210,7 @@ def create_magento_order_wilson(url, headless=False):
     #         '/html/body/div[2]/main/div[2]/div/div[2]/div[4]/ol/li[3]/div/form/fieldset/div[1]/div/div/div[2]/div[2]/div[4]/div/button/span').click()
 
     browser.switch_to_default_content()
-    time.sleep(5)
+    time.sleep(10)
 
     # browser.find_element_by_xpath(
     #         '/html/body/div[1]/main/div[2]/div/div[2]/div[4]/ol/li[3]/div/form/fieldset/div[1]/div/div/div[2]/div[2]/div[4]/div/button/span').click()

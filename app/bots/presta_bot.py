@@ -353,5 +353,5 @@ def create_presta_testing_order(url="http://prestashop-02.testing.ns8demos.com/i
     browser.execute_script("arguments[0].click();", con_btn)
 
 
-    time.sleep(1)
-    browser.quit()
+    time.sleep(5)
+    browser.quit()    

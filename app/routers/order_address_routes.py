@@ -4,6 +4,8 @@ from app.bots.order_bot import create_woo_order, create_magento_order, create_ma
 from app.bots.shopify_bots import create_shopify_order, create_shopify_order_kacoko
 from app.bots.big_com_bots import create_bc_order
 from app.bots.presta_bot import create_presta_order, create_presta_testing_order
+from app.bots.magento_bots import create_magento_order_wilson
+from app.bots.sap_bot import create_sap_order
 from app.periodic import PeriodicFunction
 from app.firebase.fb_client import fb_client
 import google.cloud.logging
@@ -40,7 +42,7 @@ def place_magento_order(traffic_id: str, background_tasks: BackgroundTasks):
     address = doc_ref.get().to_dict()['address']
     try:
         # background_tasks.add_task(create_magento_order, True)
-        create_magento_order(url=address, headless=True)
+        create_magento_order_wilson(url=address, headless=True)
         return {'Status' : 'Success'}
     except Exception as e:
         return {'Status': 'Failed',
@@ -124,6 +126,18 @@ def place_presta_testing_order():
         return {'Status': 'Failed',
                 'error' : e}
 
+
+@router.get('/orders/sap_order')
+def place_sap_order():
+    """
+        order from the NS8 electronics SAP Store
+    """
+    try:
+        create_sap_order(headless=True)
+        return {'Status' : 'Success'}
+    except Exception as e:
+        return {'Status': 'Failed',
+                'error' : e}
 
 
 
