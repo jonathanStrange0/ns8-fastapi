@@ -12,7 +12,7 @@ logging_client.setup_logging()
 def create_sap_order(url="https://electronics.cled7lxnr3-ns8azuree1-d1-public.model-t.cc.commerce.ondemand.com/yacceleratorstorefront/electronics/en/", headless=False):
 
     # create instance of faker
-    Faker.seed(42)
+    # Faker.seed(42)
     fake = Faker()
     # get the store up in selenium
 

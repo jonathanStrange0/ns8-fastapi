@@ -105,15 +105,6 @@ def place_bigcommerce_order():
         return {'Status': 'Failed',
                 'error' : e}
 
-@router.get('/orders/presta')
-def place_presta_order():
-    try:
-        create_presta_order(headless=True)
-        return {'Status' : 'Success'}
-    except Exception as e:
-        return {'Status': 'Failed',
-                'error' : e}
-
 @router.get('/orders/presta_testing')
 def place_presta_testing_order():
     """
@@ -133,7 +124,7 @@ def place_sap_order():
         order from the NS8 electronics SAP Store
     """
     try:
-        create_sap_order(headless=True)
+        create_sap_order    (headless=True)
         return {'Status' : 'Success'}
     except Exception as e:
         return {'Status': 'Failed',
