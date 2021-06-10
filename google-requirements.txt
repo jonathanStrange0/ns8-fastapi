@@ -6,7 +6,7 @@ chardet==3.0.4
 Click==7.0
 chromedriver-binary
 Faker==4.0.1
-fastapi==0.52.0
+fastapi==0.65.2
 firebase-admin==4.0.0
 google-api-core==1.16.0
 google-api-python-client==1.7.11
